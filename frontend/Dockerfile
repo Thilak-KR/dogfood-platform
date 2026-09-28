@@ -1,6 +1,7 @@
 FROM node:22-alpine
 
 WORKDIR /app
+ENV DOGFOOD_BACKEND_URL=http://backend:8000
 
 COPY package.json package-lock.json ./
 RUN npm ci

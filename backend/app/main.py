@@ -21,6 +21,7 @@ from app.models import (
     RubricCriterion,
     Score,
     Team,
+    TeamMember,
     TeamInvite,
     Track,
 )
@@ -117,6 +118,44 @@ def gallery(q: str | None = None, track: str | None = None, db: Session = Depend
         normalized = q.casefold()
         projects = [p for p in projects if normalized in p.title.casefold() or normalized in p.summary.casefold()]
     return [project_json(project) for project in projects]
+
+
+@app.get("/api/participant/workspace")
+def participant_workspace(db: Session = Depends(get_db), current: LocalSession = Depends(require_role("participant"))) -> dict[str, object]:
+    event = current_event(db)
+    close = event.submissions_close
+    if close is not None and close.tzinfo is None:
+        close = close.replace(tzinfo=timezone.utc)
+    teams = db.scalars(
+        select(Team)
+        .join(TeamMember)
+        .where(TeamMember.email == current.subject_id)
+        .order_by(Team.id)
+    ).all()
+    team_data = []
+    for team in teams:
+        projects = db.scalars(
+            select(Project).where(Project.team_id == team.id).order_by(Project.id)
+        ).all()
+        team_data.append({
+            "id": team.id,
+            "name": team.name,
+            "members": list(team.members),
+            "projects": [project_json(project) for project in projects],
+        })
+
+    tracks = db.scalars(select(Track).where(Track.event_id == event.id).order_by(Track.id)).all()
+    return {
+        "participant": {"id": current.subject_id, "role": current.role},
+        "event": {
+            "id": event.id,
+            "name": event.name,
+            "submissions_close": close.isoformat() if close else None,
+            "dates": event.dates,
+        },
+        "tracks": [{"id": track.id, "name": track.name} for track in tracks],
+        "teams": team_data,
+    }
 
 
 @app.post("/events", status_code=201)
@@ -296,6 +335,30 @@ def judge_scores(judge: str | None = None, db: Session = Depends(get_db), curren
         raise HTTPException(status_code=403, detail="Judges cannot access peer scores")
     scores = db.scalars(select(Score).where(Score.judge_id == current.subject_id).order_by(Score.project_id)).all()
     return [{"judge": s.judge_id, "project": s.project_id, "criteria": s.criteria, "comment": s.comment} for s in scores]
+
+
+@app.get("/api/judge/workspace")
+def judge_workspace(db: Session = Depends(get_db), current: LocalSession = Depends(require_role("judge"))) -> dict[str, object]:
+    event = current_event(db)
+    assignments = db.scalars(
+        select(JudgeAssignment)
+        .where(JudgeAssignment.judge_id == current.subject_id)
+        .order_by(JudgeAssignment.project_id)
+    ).all()
+    projects = []
+    for assignment in assignments:
+        project = db.get(Project, assignment.project_id)
+        if project is not None:
+            projects.append({**project_json(project), "track_name": project.track.name})
+    criteria = db.scalars(
+        select(RubricCriterion)
+        .where(RubricCriterion.event_id == event.id)
+        .order_by(RubricCriterion.id)
+    ).all()
+    return {
+        "projects": projects,
+        "criteria": [{"name": item.name, "weight": item.weight} for item in criteria],
+    }
 
 
 @app.post("/api/judge/scores", status_code=201)

@@ -100,6 +100,41 @@ a {
   border-bottom-color: #f2b56f;
 }
 
+.header-tools {
+  justify-self: end;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.demo-role-switcher {
+  display: grid;
+  gap: 3px;
+}
+
+.demo-role-switcher span {
+  color: #b7cec1;
+  font-size: 8px;
+  font-weight: 700;
+  letter-spacing: 0.7px;
+}
+
+.demo-role-switcher select {
+  max-width: 115px;
+  border: 0;
+  outline: 0;
+  background: transparent;
+  color: #fff;
+  cursor: pointer;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.demo-role-switcher option {
+  background: var(--deep-green);
+  color: #fff;
+}
+
 .event-label {
   justify-self: end;
   color: #b7cec1;
@@ -743,6 +778,339 @@ h1 {
   margin: 0;
 }
 
+.workspace-actions {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin: 22px 0 26px;
+}
+
+.session-badge {
+  padding: 6px 9px;
+  border-radius: 3px;
+  background: #e6f0e9;
+  color: #285b43;
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.deadline-banner {
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
+  margin-bottom: 20px;
+  padding: 13px 16px;
+  border: 1px solid #e3c9a2;
+  border-radius: 5px;
+  background: #fff8eb;
+  color: #775426;
+  font-size: 12px;
+}
+
+.deadline-banner strong {
+  color: #654315;
+}
+
+.deadline-open {
+  border-color: #c8d9cc;
+  background: #eaf1ec;
+  color: #3c5f4a;
+}
+
+.deadline-open strong {
+  color: var(--deep-green);
+}
+
+.form-message {
+  margin: 0 0 14px;
+  color: var(--green);
+  font-size: 13px;
+}
+
+.form-error {
+  color: #8f4326;
+}
+
+.invite-result {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px 14px;
+  margin-bottom: 20px;
+  padding: 13px 16px;
+  border: 1px solid var(--line);
+  border-radius: 5px;
+  background: #fff;
+  font-size: 12px;
+}
+
+.invite-result strong {
+  color: var(--deep-green);
+}
+
+.invite-result a {
+  min-width: 0;
+  overflow-wrap: anywhere;
+  color: var(--green);
+}
+
+.text-action {
+  padding: 2px 0;
+  border: 0;
+  background: transparent;
+  color: var(--green);
+  cursor: pointer;
+  font-size: 12px;
+  font-weight: 700;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.workspace-section {
+  margin-top: 35px;
+}
+
+.participant-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px;
+}
+
+.workspace-card,
+.judge-project-card {
+  min-width: 0;
+  padding: 21px;
+  border: 1px solid var(--line);
+  border-radius: 5px;
+  background: #fff;
+}
+
+.workspace-card h3 {
+  margin: 0 0 15px;
+  color: var(--deep-green);
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 20px;
+  font-weight: 500;
+}
+
+.workspace-description {
+  color: var(--muted);
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+.team-list {
+  display: grid;
+  gap: 7px;
+  margin-bottom: 16px;
+}
+
+.team-choice {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 10px 11px;
+  border: 1px solid var(--line);
+  border-radius: 4px;
+  background: #fff;
+  color: var(--ink);
+  cursor: pointer;
+  text-align: left;
+}
+
+.team-choice.selected {
+  border-color: var(--green);
+  background: #eef4ef;
+}
+
+.team-choice strong {
+  overflow-wrap: anywhere;
+  font-size: 12px;
+}
+
+.team-choice span {
+  flex: none;
+  color: var(--muted);
+  font-size: 10px;
+}
+
+.form-field {
+  display: grid;
+  gap: 6px;
+  margin-bottom: 13px;
+  color: var(--ink);
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.form-field input,
+.form-field select,
+.form-field textarea {
+  width: 100%;
+  min-width: 0;
+  padding: 10px 11px;
+  border: 1px solid #cbd5cd;
+  border-radius: 4px;
+  outline: 0;
+  background: #fff;
+  color: var(--ink);
+  font-size: 13px;
+  font-weight: 400;
+}
+
+.form-field textarea {
+  min-height: 86px;
+  resize: vertical;
+  line-height: 1.5;
+}
+
+.form-field input:focus,
+.form-field select:focus,
+.form-field textarea:focus {
+  border-color: var(--green);
+  box-shadow: 0 0 0 3px rgb(23 97 72 / 14%);
+}
+
+.form-divider {
+  height: 1px;
+  margin: 20px 0;
+  background: var(--line);
+}
+
+.workspace-card > .primary-action,
+.workspace-card > .secondary-action,
+.project-editor > .project-form-actions {
+  margin-top: 3px;
+}
+
+.workspace-empty {
+  margin: 0 0 14px;
+  padding: 22px 16px;
+}
+
+.team-project-list {
+  display: grid;
+  gap: 8px;
+  margin-bottom: 14px;
+}
+
+.team-project-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  padding: 13px 15px;
+  border: 1px solid var(--line);
+  border-radius: 5px;
+  background: #fff;
+}
+
+.team-project-row > div {
+  min-width: 0;
+  display: grid;
+  gap: 5px;
+}
+
+.team-project-row strong {
+  overflow-wrap: anywhere;
+  color: var(--ink);
+  font-size: 13px;
+}
+
+.team-project-row span {
+  color: var(--muted);
+  font-size: 11px;
+  text-transform: capitalize;
+}
+
+.project-editor {
+  max-width: 820px;
+}
+
+.project-form-actions {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 9px;
+  margin-top: 17px;
+}
+
+.judge-project-list {
+  display: grid;
+  gap: 14px;
+  margin-top: 24px;
+}
+
+.judge-project-card {
+  display: grid;
+  gap: 18px;
+}
+
+.judge-project-heading {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 18px;
+}
+
+.judge-project-heading h2 {
+  margin: 11px 0 7px;
+  color: var(--deep-green);
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 22px;
+  font-weight: 500;
+}
+
+.judge-project-heading p {
+  max-width: 760px;
+  margin: 0;
+  color: var(--muted);
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+.rubric-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.rubric-field {
+  margin-bottom: 0;
+}
+
+.rubric-field > span {
+  display: flex;
+  justify-content: space-between;
+  gap: 8px;
+  text-transform: capitalize;
+}
+
+.rubric-field small {
+  color: var(--muted);
+  font-size: 10px;
+  font-weight: 400;
+  text-transform: none;
+}
+
+.saved-score {
+  display: grid;
+  gap: 5px;
+  padding: 12px 14px;
+  border-left: 3px solid var(--green);
+  background: #eef4ef;
+  color: #405b49;
+  font-size: 12px;
+}
+
+.saved-score p {
+  margin: 2px 0 0;
+  color: var(--muted);
+  line-height: 1.5;
+}
+
 .visually-hidden {
   position: absolute;
   width: 1px;
@@ -853,6 +1221,14 @@ select:focus-visible {
     font-size: 12px;
   }
 
+  .header-tools {
+    gap: 0;
+  }
+
+  .event-label {
+    display: none;
+  }
+
   .content {
     width: calc(100% - 32px);
     padding-top: 37px;
@@ -952,6 +1328,27 @@ select:focus-visible {
   .results-table th,
   .results-table td {
     padding: 12px;
+  }
+
+  .participant-grid,
+  .rubric-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .judge-project-heading {
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .deadline-banner {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  .invite-result {
+    align-items: flex-start;
+    flex-direction: column;
   }
 
   .footer {

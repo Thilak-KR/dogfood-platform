@@ -82,10 +82,16 @@ def test_checker_auth_gallery_deadline_and_export(test_engine):
     assert own_scores.status_code == 200
 
     peer_scores = client.get(
-        "/api/judge/scores?judge=judge_a",
+        "/api/judge/scores?judge=jdg_01",
         headers={"Cookie": "session=jdg_b_44de"},
     )
     assert peer_scores.status_code in (401, 403)
+
+    reverse_peer_scores = client.get(
+        "/api/judge/scores?judge=jdg_02",
+        headers={"Cookie": "session=jdg_a_91bc"},
+    )
+    assert reverse_peer_scores.status_code in (401, 403)
 
     participant_scores = client.get(
         "/api/judge/scores", headers={"Cookie": "session=prt_2e88"}
@@ -106,6 +112,52 @@ def test_progress_is_organizer_only_and_counts_uneven_reviews(test_engine):
     assert len(data) == 41
     assert len({item["completed_reviews"] for item in data}) > 1
     assert client.get("/api/organizer/progress").status_code == 401
+
+
+def test_participant_workspace_returns_only_the_current_membership(test_engine):
+    client = TestClient(main.app)
+    participant = {"Cookie": "session=prt_2e88"}
+    response = client.get("/api/participant/workspace", headers=participant)
+
+    assert response.status_code == 200
+    data = response.json()
+    assert data["participant"] == {"id": "checker-participant", "role": "participant"}
+    assert data["event"]["id"] == "evt_01"
+    assert data["event"]["submissions_close"] == "2026-03-01T18:00:00+00:00"
+    assert len(data["tracks"]) == 8
+    assert data["teams"] == []
+
+    created = client.post("/teams", headers=participant, json={"name": "Workspace team"})
+    assert created.status_code == 201
+    refreshed = client.get("/api/participant/workspace", headers=participant).json()
+    assert [team["id"] for team in refreshed["teams"]] == [created.json()["id"]]
+
+    assert client.get(
+        "/api/participant/workspace", headers={"Cookie": "session=org_7f2a"}
+    ).status_code == 403
+
+
+def test_judge_workspace_contains_only_assigned_projects_and_rubric(test_engine):
+    client = TestClient(main.app)
+    judge = {"Cookie": "session=jdg_a_91bc"}
+    response = client.get("/api/judge/workspace", headers=judge)
+
+    assert response.status_code == 200
+    data = response.json()
+    assert data["projects"]
+    assert all("track_name" in project for project in data["projects"])
+    assert {criterion["name"] for criterion in data["criteria"]} == {
+        "functionality",
+        "innovation",
+        "quality",
+    }
+    assert "scores" not in data
+    assert client.get(
+        "/api/judge/workspace", headers={"Cookie": "session=prt_2e88"}
+    ).status_code == 403
+    assert client.get(
+        "/api/judge/workspace", headers={"Cookie": "session=org_7f2a"}
+    ).status_code == 403
 
 
 def test_event_creation_team_invites_and_rubric_configuration(test_engine):
