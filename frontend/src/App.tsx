@@ -1,5 +1,8 @@
 import { useEffect, useLayoutEffect, useState } from "react";
 
+const API_BASE_URL =
+  import.meta.env.VITE_API_BASE_URL || "http://localhost:8000";
+
 type Project = {
   id: string;
   team: string;
@@ -171,7 +174,7 @@ async function fetchResponse(
   if (init.body && !headers.has("Content-Type")) {
     headers.set("Content-Type", "application/json");
   }
-  const response = await fetch(path, {
+  const response = await fetch(`${API_BASE_URL}${path}`, {
     ...init,
     credentials: "include",
     headers,
@@ -1062,7 +1065,7 @@ function OrganizerDashboard() {
     setExportError(null);
 
     try {
-      const response = await fetch("/api/export.csv", {
+      const response = await fetch(`${API_BASE_URL}/api/export.csv`, {
         credentials: "include",
       });
 
@@ -1386,7 +1389,11 @@ export default function App() {
       setIsLoading(true);
       setError(null);
 
-      fetch(query ? "/projects?" + query : "/projects", {
+      fetch(
+        query
+          ? `${API_BASE_URL}/projects?${query}`
+          : `${API_BASE_URL}/projects`,
+        {
         signal: controller.signal,
       })
         .then((response) => {
@@ -1745,3 +1752,4 @@ export default function App() {
     </div>
   );
 }
+
